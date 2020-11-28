@@ -1,0 +1,332 @@
+CREATE TABLE IF NOT EXISTS Addresses_old(
+id INTEGER,
+city VARCHAR (30),
+street VARCHAR (30),
+house_number VARCHAR (30),
+apartment VARCHAR (30),
+indexx INTEGER,
+operation VARCHAR,
+date_operation timestamp DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS Person_old(
+id INTEGER,
+surname VARCHAR (30),
+name VARCHAR (30),
+patronymic VARCHAR (30),
+gender VARCHAR (1),
+number_phone VARCHAR (12),
+date_of_birth INTEGER,
+addresses_id INTEGER,
+operation VARCHAR,
+date_operation timestamp DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS Employee_old(
+id INTEGER,
+login VARCHAR(32) UNIQUE ,
+password VARCHAR(32),
+person_id INTEGER,
+name_position VARCHAR (30),
+operation VARCHAR,
+date_operation timestamp DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS GOST_old(
+id INTEGER,
+name_GOST VARCHAR (20),
+operation VARCHAR,
+date_operation timestamp DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS Culture_parameters_old(
+id INTEGER,
+name_of_culture VARCHAR (10),
+type_of_culture VARCHAR (10),
+operation VARCHAR,
+date_operation timestamp DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS Delivery_old(
+id INTEGER,
+car_make VARCHAR (10),
+car_number VARCHAR (10),
+person_id INTEGER,
+operation VARCHAR,
+date_operation timestamp DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS Organization_old(
+id INTEGER,
+name_organization VARCHAR (20),
+inn INTEGER,
+ogrn INTEGER,
+addresses_id INTEGER,
+delivery_id INTEGER,
+operation VARCHAR,
+date_operation timestamp DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS Laboratory_analysis_old(
+id INTEGER,
+protein INTEGER,
+gluten INTEGER,
+weediness INTEGER,
+humidity INTEGER,
+final_class VARCHAR (10),
+gost_id INTEGER,
+employee_id INTEGER,
+operation VARCHAR,
+date_operation timestamp DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS Waybill_old(
+id INTEGER,
+data DATE,
+weight INTEGER,
+culture_id INTEGER,
+organization_id INTEGER,
+analysis_id INTEGER,
+operation VARCHAR,
+date_operation timestamp DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS Stock_old(
+id INTEGER,
+waybill_id INTEGER,
+cargo_weight INTEGER,
+silo_number INTEGER,
+residue INTEGER,
+total_capacity INTEGER,
+operation VARCHAR,
+date_operation timestamp DEFAULT now()
+);
+
+CREATE OR REPLACE FUNCTION Addresses_backup() RETURNS TRIGGER AS
+$Addresses$
+BEGIN
+    IF (TG_OP = 'DELETE') THEN
+        INSERT INTO Addresses_old SELECT OLD.*, TG_OP, now();
+        RETURN OLD;
+    ELSIF (TG_OP = 'UPDATE') THEN
+        IF (OLD != NEW) THEN
+            INSERT INTO Addresses_old SELECT OLD.*, TG_OP, now();
+            RETURN NEW;
+        END IF;
+    ELSIF (TG_OP = 'INSERT') THEN
+        INSERT INTO Addresses_old SELECT NEW.*, TG_OP, now();
+        RETURN NEW;
+    END IF;
+    RETURN NULL;
+END ;
+$Addresses$ LANGUAGE plpgsql;
+
+CREATE TRIGGER Addresses
+    AFTER INSERT OR UPDATE OR DELETE
+    ON Addresses
+    FOR EACH ROW
+EXECUTE PROCEDURE Addresses_backup();
+
+CREATE OR REPLACE FUNCTION Employee_backup() RETURNS TRIGGER AS
+$Employee$
+BEGIN
+    IF (TG_OP = 'DELETE') THEN
+        INSERT INTO Employee_old SELECT OLD.*, TG_OP, now();
+        RETURN OLD;
+    ELSIF (TG_OP = 'UPDATE') THEN
+        IF (OLD != NEW) THEN
+            INSERT INTO Employee_old SELECT OLD.*, TG_OP, now();
+            RETURN NEW;
+        END IF;
+    ELSIF (TG_OP = 'INSERT') THEN
+        INSERT INTO Employee_old SELECT NEW.*, TG_OP, now();
+        RETURN NEW;
+    END IF;
+    RETURN NULL;
+END ;
+$Employee$ LANGUAGE plpgsql;
+
+CREATE TRIGGER Employee
+    AFTER INSERT OR UPDATE OR DELETE
+    ON Employee
+    FOR EACH ROW
+EXECUTE PROCEDURE Employee_backup();
+
+CREATE OR REPLACE FUNCTION GOST_backup() RETURNS TRIGGER AS
+$GOST$
+BEGIN
+    IF (TG_OP = 'DELETE') THEN
+        INSERT INTO GOST_old SELECT OLD.*, TG_OP, now();
+        RETURN OLD;
+    ELSIF (TG_OP = 'UPDATE') THEN
+        IF (OLD != NEW) THEN
+            INSERT INTO GOST_old SELECT OLD.*, TG_OP, now();
+            RETURN NEW;
+        END IF;
+    ELSIF (TG_OP = 'INSERT') THEN
+        INSERT INTO GOST_old SELECT NEW.*, TG_OP, now();
+        RETURN NEW;
+    END IF;
+    RETURN NULL;
+END ;
+$GOST$ LANGUAGE plpgsql;
+
+CREATE TRIGGER GOST
+    AFTER INSERT OR UPDATE OR DELETE
+    ON GOST
+    FOR EACH ROW
+EXECUTE PROCEDURE GOST_backup();
+
+CREATE OR REPLACE FUNCTION Culture_parameters_backup() RETURNS TRIGGER AS
+$Culture_parameters$
+BEGIN
+    IF (TG_OP = 'DELETE') THEN
+        INSERT INTO Culture_parameters_old SELECT OLD.*, TG_OP, now();
+        RETURN OLD;
+    ELSIF (TG_OP = 'UPDATE') THEN
+        IF (OLD != NEW) THEN
+            INSERT INTO Culture_parameters_old SELECT OLD.*, TG_OP, now();
+            RETURN NEW;
+        END IF;
+    ELSIF (TG_OP = 'INSERT') THEN
+        INSERT INTO Culture_parameters_old SELECT NEW.*, TG_OP, now();
+        RETURN NEW;
+    END IF;
+    RETURN NULL;
+END ;
+$Culture_parameters$ LANGUAGE plpgsql;
+
+CREATE TRIGGER Culture_parameters
+    AFTER INSERT OR UPDATE OR DELETE
+    ON Culture_parameters
+    FOR EACH ROW
+EXECUTE PROCEDURE Culture_parameters_backup();
+
+CREATE OR REPLACE FUNCTION Delivery_backup() RETURNS TRIGGER AS
+$Delivery$
+BEGIN
+    IF (TG_OP = 'DELETE') THEN
+        INSERT INTO Delivery_old SELECT OLD.*, TG_OP, now();
+        RETURN OLD;
+    ELSIF (TG_OP = 'UPDATE') THEN
+        IF (OLD != NEW) THEN
+            INSERT INTO Delivery_old SELECT OLD.*, TG_OP, now();
+            RETURN NEW;
+        END IF;
+    ELSIF (TG_OP = 'INSERT') THEN
+        INSERT INTO Delivery_old SELECT NEW.*, TG_OP, now();
+        RETURN NEW;
+    END IF;
+    RETURN NULL;
+END ;
+$Delivery$ LANGUAGE plpgsql;
+
+CREATE TRIGGER Delivery
+    AFTER INSERT OR UPDATE OR DELETE
+    ON Delivery
+    FOR EACH ROW
+EXECUTE PROCEDURE Delivery_backup();
+
+CREATE OR REPLACE FUNCTION Organization_backup() RETURNS TRIGGER AS
+$Organization$
+BEGIN
+    IF (TG_OP = 'DELETE') THEN
+        INSERT INTO Organization_old SELECT OLD.*, TG_OP, now();
+        RETURN OLD;
+    ELSIF (TG_OP = 'UPDATE') THEN
+        IF (OLD != NEW) THEN
+            INSERT INTO Organization_old SELECT OLD.*, TG_OP, now();
+            RETURN NEW;
+        END IF;
+    ELSIF (TG_OP = 'INSERT') THEN
+        INSERT INTO Organization_old SELECT NEW.*, TG_OP, now();
+        RETURN NEW;
+    END IF;
+    RETURN NULL;
+END ;
+$Organization$ LANGUAGE plpgsql;
+
+CREATE TRIGGER Organization
+    AFTER INSERT OR UPDATE OR DELETE
+    ON Organization
+    FOR EACH ROW
+EXECUTE PROCEDURE Organization_backup();
+
+CREATE OR REPLACE FUNCTION Laboratory_analysis_backup() RETURNS TRIGGER AS
+$Laboratory_analysis$
+BEGIN
+    IF (TG_OP = 'DELETE') THEN
+        INSERT INTO Laboratory_analysis_old SELECT OLD.*, TG_OP, now();
+        RETURN OLD;
+    ELSIF (TG_OP = 'UPDATE') THEN
+        IF (OLD != NEW) THEN
+            INSERT INTO Laboratory_analysis_old SELECT OLD.*, TG_OP, now();
+            RETURN NEW;
+        END IF;
+    ELSIF (TG_OP = 'INSERT') THEN
+        INSERT INTO Laboratory_analysis_old SELECT NEW.*, TG_OP, now();
+        RETURN NEW;
+    END IF;
+    RETURN NULL;
+END ;
+$Laboratory_analysis$ LANGUAGE plpgsql;
+
+CREATE TRIGGER Laboratory_analysis
+    AFTER INSERT OR UPDATE OR DELETE
+    ON Laboratory_analysis
+    FOR EACH ROW
+EXECUTE PROCEDURE Laboratory_analysis_backup();
+
+CREATE OR REPLACE FUNCTION Waybill_backup() RETURNS TRIGGER AS
+$Waybill$
+BEGIN
+    IF (TG_OP = 'DELETE') THEN
+        INSERT INTO Waybill_old SELECT OLD.*, TG_OP, now();
+        RETURN OLD;
+    ELSIF (TG_OP = 'UPDATE') THEN
+        IF (OLD != NEW) THEN
+            INSERT INTO Waybill_old SELECT OLD.*, TG_OP, now();
+            RETURN NEW;
+        END IF;
+    ELSIF (TG_OP = 'INSERT') THEN
+        INSERT INTO Waybill_old SELECT NEW.*, TG_OP, now();
+        RETURN NEW;
+    END IF;
+    RETURN NULL;
+END ;
+$Waybill$ LANGUAGE plpgsql;
+
+CREATE TRIGGER Waybill
+    AFTER INSERT OR UPDATE OR DELETE
+    ON Waybill
+    FOR EACH ROW
+EXECUTE PROCEDURE Waybill_backup();
+
+CREATE OR REPLACE FUNCTION Stock_backup() RETURNS TRIGGER AS
+$Stock$
+BEGIN
+    IF (TG_OP = 'DELETE') THEN
+        INSERT INTO Stock_old SELECT OLD.*, TG_OP, now();
+        RETURN OLD;
+    ELSIF (TG_OP = 'UPDATE') THEN
+        IF (OLD != NEW) THEN
+            INSERT INTO Stock_old SELECT OLD.*, TG_OP, now();
+            RETURN NEW;
+        END IF;
+    ELSIF (TG_OP = 'INSERT') THEN
+        INSERT INTO Stock_old SELECT NEW.*, TG_OP, now();
+        RETURN NEW;
+    END IF;
+    RETURN NULL;
+END ;
+$Stock$ LANGUAGE plpgsql;
+
+CREATE TRIGGER Stock
+    AFTER INSERT OR UPDATE OR DELETE
+    ON Stock
+    FOR EACH ROW
+EXECUTE PROCEDURE Stock_backup();
+
+
+
+

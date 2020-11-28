@@ -1,0 +1,67 @@
+{% extends 'root/main_root.html' %}
+{% block static %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'root/style.css' %}">
+{% endblock %}
+{% block title %}{{ tittle }}{% endblock %}
+
+{% block tables %}
+
+    <div style="position: absolute; top: 0px; right: 85px;">
+        <form action="{% url 'root:show_table' %}" method="POST">
+            {% csrf_token %}
+            <div>
+                <input type="submit" class="btn btn-primary" name="_back" value="back">
+            </div>
+        </form>
+    </div>
+
+    <div style="position: absolute; top: 0; right: 5px;">
+        <form action="{% url 'root:show_dumps' %}" method="POST">
+            {% csrf_token %}
+            <div>
+                <input type="submit" class="btn btn-danger" name="_create_dumps" value="Dump">
+            </div>
+        </form>
+    </div>
+
+    <div style="display: flex; align-items: center; justify-content: center">
+
+        <table class="table table-inverse">
+            <thead>
+            <tr>
+                <th>Dump name</th>
+                <th>Dump date</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for i, j in strings %}
+                    <tr>
+                        <form action="{% url 'root:show_dumps' %}" method="POST" class="dn" style="display: none">
+                            {% csrf_token %}
+                            <td>
+                                <input type="text" name="dump" class="form-control-plaintext"
+                                       value="{{ i }}">
+                            </td>
+                            <td>
+                                <input type="text" name="date" class="form-control-plaintext"
+                                       value="{{ j }}">
+                            </td>
+                            <td>
+                                <input type="submit" class="btn btn-primary" name="_restore" value="Recovery">
+                            </td>
+                        </form>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {% if scripts == 'incorrect input' %}
+        <script>
+            alert('{{ scripts }}');
+        </script>
+    {% endif %}
+{% endblock %}

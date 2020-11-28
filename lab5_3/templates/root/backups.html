@@ -1,0 +1,76 @@
+{% extends 'root/main_root.html' %}
+{% block static %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'root/style.css' %}">
+{% endblock %}
+{% block title %}{{ tittle }}{% endblock %}
+
+{% block tables %}
+
+    <div style="position: absolute; top: 0px; left: 5px;">
+        <form action="{% url 'root:show_table' %}" method="POST">
+            {% csrf_token %}
+            <div>
+                <input type="hidden" name="table" id="exampleInputPassword1" value="{{ table }}">
+                <input type="submit" class="btn btn-primary" name="_back" value="back">
+            </div>
+        </form>
+    </div>
+
+    <div style="display: flex; align-items: center; justify-content: center">
+
+        <table class="table table-inverse">
+            <thead>
+            <tr>
+                {% for i in titles %}
+                    <th>{{ i }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+                {% for string in strings %}
+                    <tr>
+                        <form action="{% url 'root:show_table_old' %}" method="POST" class="dn" style="display: none">
+                            {% csrf_token %}
+                            {% for i, j in string %}
+                                {% if j|length > 0 %}
+                                    <td>
+                                        <input type="text" name="{{ i }}" class="form-control-plaintext"
+                                               value="{{ j }}">
+                                    </td>
+                                {% else %}
+                                    <td style="width: 80px">
+                                        <input type="text" name="{{ i }}" class="form-control-plaintext" size="2"
+                                               value="{{ j }}">
+                                    </td>
+                                {% endif %}
+                            {% endfor %}
+                            <td>
+                                <input type="hidden" name="table" id="exampleInputPassword1" value="{{ table }}">
+                                <input type="submit" class="btn btn-primary" name="_apply" value="Apply">
+                            </td>
+                        </form>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            {#  <tr>#}
+            {#    <form action="{% url 'root:back_num' %}" method="POST">#}
+            {#        {% csrf_token %}#}
+            {#        <td>#}
+            {#            <input type="text" name="num" class="form-control-plaintext">#}
+            {#            <input type="hidden" name="table" id="exampleInputPassword1" value="{{ table }}">#}
+            {#            <input type="submit" class="btn btn-primary" name="a" value="back">#}
+            {#        </td>#}
+            {#    </form>#}
+            {#</tr>#}
+        </table>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {% if scripts == 'incorrect input' %}
+        <script>
+            alert('{{ scripts }}');
+        </script>
+    {% endif %}
+{% endblock %}

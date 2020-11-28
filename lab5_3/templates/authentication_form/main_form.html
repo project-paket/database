@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block static %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'authentication_form/style.css' %}">
+{% endblock %}
+{% block title %}Аутентификация{% endblock %}
+
+{% block content %}
+
+    <form action="{% url 'main_form:index'%}" method="POST">
+
+        {% csrf_token %}
+
+        <div class="main_form">
+            <div class="input-group">
+                <div class="input-group mb-1">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text change_size_form fix_padding_main_form" id="inputGroup-sizing-default">Логин</span>
+                    </div>
+                    <input type="text" name="login" class="form-control" aria-label="Default"
+                           aria-describedby="inputGroup-sizing-default">
+                </div>
+                <div class="input-group mb-1">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text change_size_form" id="inputGroup-sizing-default">Пароль</span>
+                    </div>
+                    <input type="password" name="password" class="form-control" aria-label="Default"
+                           aria-describedby="inputGroup-sizing-default">
+                </div>
+            </div>
+            <button type="sumbit" class="btn btn-success button_center">Войти</button>
+        </div>
+
+
+
+    </form>
+{% endblock %}
+{% block scripts %}
+    {% if scripts == 'wrong password or login' %}
+        <script>
+            alert('{{ scripts }}');
+        </script>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,94 @@
+CREATE TABLE IF NOT EXISTS Addresses(
+id serial PRIMARY KEY,
+city VARCHAR (30),
+street VARCHAR (30),
+house_number VARCHAR (30),
+apartment VARCHAR (30),
+indexx INTEGER
+);
+
+CREATE TABLE IF NOT EXISTS Person(
+id serial PRIMARY KEY,
+surname VARCHAR (30),
+name VARCHAR (30),
+patronymic VARCHAR (30),
+gender VARCHAR (1),
+number_phone VARCHAR (12),
+date_of_birth INTEGER,
+addresses_id INTEGER,
+FOREIGN KEY (addresses_id) REFERENCES Addresses (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Employee(
+id serial PRIMARY KEY,
+login VARCHAR(32) UNIQUE ,
+password VARCHAR(32),
+person_id INTEGER,
+FOREIGN KEY (person_id) REFERENCES Person (id) ON DELETE CASCADE ON UPDATE CASCADE,
+name_position VARCHAR (30)
+);
+
+CREATE TABLE IF NOT EXISTS GOST(
+id serial PRIMARY KEY,
+name_GOST VARCHAR (20)
+);
+
+CREATE TABLE IF NOT EXISTS Culture_parameters(
+id serial PRIMARY KEY,
+name_of_culture VARCHAR (10),
+type_of_culture VARCHAR (10)
+);
+
+CREATE TABLE IF NOT EXISTS Delivery(
+id serial PRIMARY KEY,
+car_make VARCHAR (10),
+car_number VARCHAR (10),
+person_id INTEGER,
+FOREIGN KEY (person_id) REFERENCES Person(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Organization(
+id serial PRIMARY KEY,
+name_organization VARCHAR (20),
+inn INTEGER,
+ogrn INTEGER,
+addresses_id INTEGER,
+FOREIGN KEY (addresses_id) REFERENCES Addresses(id) ON DELETE CASCADE ON UPDATE CASCADE,
+delivery_id INTEGER,
+FOREIGN KEY (delivery_id) REFERENCES Delivery(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Laboratory_analysis (
+id serial PRIMARY KEY,
+protein INTEGER,
+gluten INTEGER,
+weediness INTEGER,
+humidity INTEGER,
+final_class VARCHAR (10),
+gost_id INTEGER,
+FOREIGN KEY (gost_id) REFERENCES GOST (id) ON DELETE CASCADE ON UPDATE CASCADE,
+employee_id INTEGER,
+FOREIGN KEY (employee_id) REFERENCES Employee (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Waybill(
+id serial PRIMARY KEY,
+data DATE,
+weight INTEGER,
+culture_id INTEGER,
+FOREIGN KEY (culture_id) REFERENCES Culture_parameters (id) ON DELETE CASCADE ON UPDATE CASCADE,
+organization_id INTEGER,
+FOREIGN KEY (organization_id) REFERENCES Organization (id) ON DELETE CASCADE ON UPDATE CASCADE,
+analysis_id INTEGER,
+FOREIGN KEY (analysis_id) REFERENCES Laboratory_analysis ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Stock(
+id serial PRIMARY KEY,
+waybill_id INTEGER,
+FOREIGN KEY (waybill_id) REFERENCES Waybill (id) ON DELETE CASCADE ON UPDATE CASCADE,
+cargo_weight INTEGER,
+silo_number INTEGER,
+residue INTEGER,
+total_capacity INTEGER
+);

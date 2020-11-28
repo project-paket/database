@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block static %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'root/style.css' %}">
+{% endblock %}
+{% block title %}Root{% endblock %}
+
+{% block content %}
+    <div class="btn-group" role="group" style="display: flex; align-items: center; justify-content: center" aria-label="Basic example">
+        <form action="{% url 'root:show_table' %}"  method="POST">
+            {% csrf_token %}
+            {% for i in tables %}
+                <input type="submit" class="btn btn-secondary" name="link" value="{{ i }}">
+            {% endfor %}
+        </form>
+    </div>
+    {% block tables %}
+
+    {% endblock %}
+
+{% endblock %}

@@ -1,0 +1,132 @@
+{% extends 'root/main_root.html' %}
+{% block static %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'root/style.css' %}">
+{% endblock %}
+{% block title %}{{ tittle }}{% endblock %}
+
+{% block tables %}
+
+    <div style="position: absolute; top: 0; right: 5px;">
+        <form action="{% url 'root:show_table_old' %}" method="POST">
+            {% csrf_token %}
+            <div>
+                <input type="hidden" name="table" id="exampleInputPassword1" value="{{ table }}">
+                <input type="submit" class="btn btn-danger" name="_backup" value="Backup">
+            </div>
+        </form>
+    </div>
+
+    <div style="position: absolute; top: 0; right: 85px;">
+        <form action="{% url 'root:show_dumps' %}" method="POST">
+            {% csrf_token %}
+            <div>
+                <input type="hidden" name="table" id="exampleInputPassword1" value="{{ table }}">
+                <input type="submit" class="btn btn-danger" name="_dump" value="Dumps">
+            </div>
+        </form>
+    </div>
+
+    <div style="display: flex; align-items: center; justify-content: center">
+
+        <table class="table table-inverse">
+            <thead>
+            <tr>
+                {% for i in titles %}
+                    <th>{{ i }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {% if strings %}
+                {% for string in strings %}
+                    <tr>
+                        <form action="{% url 'root:show_table' %}" method="POST" class="dn" style="display: none">
+                            {% csrf_token %}
+                            {% for i, j in string %}
+                                {% if j|length > 0 %}
+                                    <td>
+                                        <input type="text" name="{{ i }}" class="form-control-plaintext"
+                                               value="{{ j }}">
+                                        <input type="hidden" name="{{ i }}_old" id="exampleInputPassword1"
+                                               value="{{ j }}">
+                                    </td>
+                                {% else %}
+                                    <td style="width: 120px">
+                                        <input type="text" name="{{ i }}" class="form-control-plaintext" size="2"
+                                               value="{{ j }}">
+                                        <input type="hidden" name="{{ i }}_old" id="exampleInputPassword1"
+                                               value="{{ j }}">
+                                    </td>
+                                {% endif %}
+                            {% endfor %}
+                            <td>
+                                <input type="hidden" name="table" id="exampleInputPassword1" value="{{ table }}">
+                                <input type="submit" class="btn btn-primary" name="_edit" value="Change">
+                                <input type="submit" class="btn btn-danger" name="_del" value="Delete">
+                            </td>
+                        </form>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <form action="{% url 'root:show_table' %}" method="POST" class="dn" style="display: none">
+                        {% csrf_token %}
+                        {% for i, j in last %}
+                            {% if j|length > 0 %}
+                                <td>
+                                    <input type="text" name="{{ i }}" class="form-control" id="exampleInputPassword1"
+                                           placeholder="{{ i }}">
+                                    <input type="hidden" name="{{ i }}_old" id="exampleInputPassword1" value="{{ i }}">
+                                </td>
+                            {% else %}
+                                <td>
+                                    <input type="text" name="{{ i }}" class="form-control" id="exampleInputPassword1"
+                                           size="2" placeholder="{{ i }}">
+                                    <input type="hidden" name="{{ i }}_old" id="exampleInputPassword1" value="{{ i }}">
+                                </td>
+                            {% endif %}
+
+                        {% endfor %}
+                        <td>
+                            <input type="hidden" name="table" id="exampleInputPassword1" value="{{ table }}">
+                            <input type="submit" class="btn btn-primary" name="_add" value="Add">
+                            <input type="submit" class="btn btn-primary" name="_search" value="Search">
+                        </td>
+                    </form>
+                </tr>
+            {% else %}
+                <tr>
+                    <form action="{% url 'root:show_table' %}" method="POST" class="dn" style="display: none">
+                        {% csrf_token %}
+                        {% for i in titles %}
+                            <td>
+                                <input type="text" name="{{ i }}" class="form-control" id="exampleInputPassword1"
+                                       placeholder="{{ i }}">
+                                <input type="hidden" name="{{ i }}_old" id="exampleInputPassword1" value="{{ i }}">
+                            </td>
+                        {% endfor %}
+                        <td>
+                            <input type="hidden" name="table" id="exampleInputPassword1" value="{{ table }}">
+                            <input type="submit" class="btn btn-primary" name="_add" value="Add">
+                            <input type="submit" class="btn btn-primary" name="_search" value="Search">
+                        </td>
+                    </form>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+
+    </div>
+
+
+
+
+{% endblock %}
+
+{% block scripts %}
+    {% if scripts == 'incorrect input' %}
+        <script>
+            alert('{{ scripts }}');
+        </script>
+    {% endif %}
+{% endblock %}

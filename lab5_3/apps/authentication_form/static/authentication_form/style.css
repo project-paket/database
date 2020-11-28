@@ -1,0 +1,25 @@
+.button_center{
+    margin-left: 46%;
+}
+
+.main_form{
+    width: 300px;
+    margin: 0;
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    margin-right: -55%;
+    transform: translate(-53%, -50%)
+}
+
+.change_size_form{
+    width: 80px;
+}
+
+.fix_padding_main_form{
+    padding-left: 18px;
+}
+
+.fix_margin_main_form{
+    margin-bottom: 3px;
+}
